@@ -513,8 +513,16 @@ class Detectors:
         f2 = 20/self.fs
 
         b, a = signal.butter(2, [f1*2, f2*2], btype='bandpass')
+        # v = signal.butter(2, [f1*2, f2*2], btype='bandpass', output="sos")
+        # v1 = signal.butter(2, f1*2, btype='low', output="zpk", analog=True)
+        # v2 = signal.butter(2, f1*2, btype='low', output="ba")
+        v1 = signal.butter(2, [f1*2, f2*2], btype='bandpass', output="sos")
+        print(v1)
+        print(b, a)
+        # b, a = signal.butter(2, f1*2, btype='low',analog=True)
 
         filtered_ecg = signal.lfilter(b, a, unfiltered_ecg)
+        filtered_ecg = signal.filtfilt(b, a, unfiltered_ecg)
 
         window1 = int(0.12*self.fs)
         mwa_qrs = MWA_from_name(MWA_name)(abs(filtered_ecg), window1)
@@ -548,7 +556,7 @@ class Detectors:
                     else:
                         QRS.append(detection)
 
-        return QRS
+        return QRS, filtered_ecg
 
     def wqrs_detector(self, unfiltered_ecg):
         """

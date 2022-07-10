@@ -29,7 +29,7 @@ else:
 
 if seldet < 0:
     # default detector
-    r_peaks = detectors.two_average_detector(unfiltered_ecg)
+    r_peaks, filtered_ecg = detectors.two_average_detector(unfiltered_ecg)
 else:
     # We use the input argument to select a detector
     r_peaks = detectors.get_detector_list()[seldet][1](unfiltered_ecg)
